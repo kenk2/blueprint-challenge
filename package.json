@@ -9,15 +9,26 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "prettier": "prettier **/*.{md,css,ts,tsx} --check",
-    "prettier:fix": "prettier **/*.{md,css,ts,tsx} --write"
+    "prettier:fix": "prettier **/*.{md,css,ts,tsx} --write",
+    "knex": "knex",
+    "knex:up": "knex migrate:up && knex seed:run",
+    "knex:down": "knex migrate:down",
+    "knex:downup": "knex migrate:down && knex migrate:up && knex seed:run"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.1",
     "@types/node": "18.15.11",
     "@types/react": "18.0.31",
     "@types/react-dom": "18.0.11",
+    "dotenv": "^16.0.3",
+    "knex": "^2.4.2",
     "next": "13.2.4",
+    "pg": "^8.11.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-query": "^3.39.3",
     "typescript": "5.0.2"
   },
   "devDependencies": {
