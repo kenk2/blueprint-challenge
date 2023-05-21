@@ -31,6 +31,8 @@ exports.up = async function (knex) {
         table.string("disorder");
         table.string("display_name");
         table.string("full_name");
+        table.string("title");
+        table.string("type");
       });
     }
   });

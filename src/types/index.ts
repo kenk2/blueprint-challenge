@@ -49,6 +49,16 @@ type Diagnostic = {
   fullName: string;
 };
 
+type DiagnosticMeta = {
+  id: string;
+  name: string;
+  disorder: string;
+  displayName: string;
+  fullName: string;
+  title: string;
+  type: string;
+};
+
 export type {
   Answer,
   Domain,
@@ -57,4 +67,5 @@ export type {
   DiagnosisScore,
   Question,
   QuestionQuery,
+  DiagnosticMeta,
 };

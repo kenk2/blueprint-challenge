@@ -22,6 +22,9 @@ exports.seed = async function (knex) {
       disorder: "Cross-Cutting",
       display_name: "BDS",
       full_name: "Blueprint Diagnostic Screener",
+      type: "standard",
+      title:
+        "During the past TWO (2) WEEKS, how much (or how often) have you been bothered by the following problems?",
     },
   ]);
 
