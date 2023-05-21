@@ -10,7 +10,27 @@ type Domain = {
 
 type Question = {
   questionId: string;
-  title: string;
+  title?: string;
+  domain: string;
+};
+
+type QuestionQuery = {
+  score: number;
+  assessment: string;
+} & Question;
+
+type Diagnosis = {
+  domain: string;
+  score: number;
+  assessment: string;
+};
+
+type DiagnosisScore = {
+  [questionId: string]: {
+    domain: string;
+    score: number;
+    assessment: string;
+  };
 };
 
 type Diagnostic = {
@@ -29,4 +49,12 @@ type Diagnostic = {
   fullName: string;
 };
 
-export type { Answer, Domain, Diagnostic };
+export type {
+  Answer,
+  Domain,
+  Diagnostic,
+  Diagnosis,
+  DiagnosisScore,
+  Question,
+  QuestionQuery,
+};
