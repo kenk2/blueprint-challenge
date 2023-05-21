@@ -10,7 +10,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "react/require-default-props": "off"
+    "react/require-default-props": "off",
+    "prefer-destructuring": "off"
   },
   "env": {
     "jest": true

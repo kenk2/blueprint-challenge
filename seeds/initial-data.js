@@ -5,6 +5,26 @@
 exports.seed = async function (knex) {
   await knex("questions").del();
   await knex("answers").del();
+  await knex("diagnoses").del();
+  await knex("diagnostic").del();
+
+  await knex("diagnoses").insert([
+    { domain: "depression", score: 2, assessment: "PHQ-9" },
+    { domain: "mania", score: 2, assessment: "ASRM" },
+    { domain: "anxiety", score: 2, assessment: "PHQ-9" },
+    { domain: "substance_use", score: 1, assessment: "ASSIST" },
+  ]);
+
+  await knex("diagnostic").insert([
+    {
+      id: "abcd-123",
+      name: "BPDS",
+      disorder: "Cross-Cutting",
+      display_name: "BDS",
+      full_name: "Blueprint Diagnostic Screener",
+    },
+  ]);
+
   await knex("answers").insert([
     { value: 0, title: "Not at all" },
     { value: 1, title: "Rare, less than a day or two" },
