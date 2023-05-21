@@ -1,6 +1,7 @@
 type Answer = {
   value: number;
   questionId: string;
+  title: string;
 };
 
 type Domain = {
@@ -12,6 +13,10 @@ type Question = {
   questionId: string;
   title?: string;
   domain: string;
+};
+
+type DiagnosticResponses = {
+  [question: string]: number;
 };
 
 type QuestionQuery = {
@@ -68,4 +73,5 @@ export type {
   Question,
   QuestionQuery,
   DiagnosticMeta,
+  DiagnosticResponses,
 };
