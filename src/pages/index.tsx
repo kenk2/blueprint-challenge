@@ -1,10 +1,17 @@
 import Head from "next/head";
 import styles from "@kenk2/styles/Home.module.css";
-import { Diagnostic } from "@kenk2/components";
+import { Diagnostic, Intro } from "@kenk2/components";
 import { useQuestions } from "@kenk2/hooks";
+import { DiagnosticResponses } from "@kenk2/types";
+import { useState } from "react";
+import { Backdrop } from "@mui/material";
 
 export default function Home() {
-  const { data } = useQuestions();
+  const { data, isLoading: isLoadingDiagnostic } = useQuestions();
+  const [started, setStarted] = useState<boolean>(false);
+
+  const handleSubmit = (results: DiagnosticResponses) => {};
+
   return (
     <>
       <Head>
@@ -14,7 +21,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {data?.data ? <Diagnostic diagnostic={data?.data} /> : null}
+        {started && data?.data ? (
+          <Diagnostic diagnostic={data?.data} onSubmit={handleSubmit} />
+        ) : (
+          <Intro
+            loading={isLoadingDiagnostic}
+            onStart={() => setStarted(true)}
+            diagnostic={data?.data}
+          />
+        )}
       </main>
     </>
   );

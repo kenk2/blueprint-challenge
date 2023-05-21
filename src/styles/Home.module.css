@@ -1,6 +1,7 @@
 .main {
-  margin: 0 auto;
-  max-width: 900px;
+  margin: 48px auto;
+  max-width: 600px;
+  width: 100%;
 }
 
 .description {

@@ -10,7 +10,6 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
-  FormLabel,
   LinearProgress,
   Radio,
   RadioGroup,
@@ -23,12 +22,13 @@ import { useMemo, useState } from "react";
 
 type DiagnosticProps = {
   diagnostic: DiagnosticForm;
+  onSubmit: (results: DiagnosticResponses) => void;
 };
 
 export default function Diagnostic(props: DiagnosticProps) {
-  const { diagnostic } = props;
+  const { diagnostic, onSubmit } = props;
   const { questions, title, answers } = diagnostic.content.sections[0];
-  const [activeQuestion, setActiveQuestion] = useState(0);
+  const [activeQuestion, setActiveQuestion] = useState<number>(0);
   const [responses, setResponses] = useState<DiagnosticResponses>({});
 
   const completedQuestions: number = useMemo(
@@ -41,34 +41,80 @@ export default function Diagnostic(props: DiagnosticProps) {
   );
 
   const currentQuestion = questions[activeQuestion];
+
   return (
     <Box>
       <Card>
         <CardContent>
-          <Stepper activeStep={activeQuestion}>
+          <Stepper
+            nonLinear
+            activeStep={activeQuestion}
+            sx={{ marginRight: -2, marginLeft: 1 }}
+          >
             {questions.map((question, index) => (
-              <Step key={question.questionId}>
+              <Step
+                key={question.questionId}
+                completed={
+                  responses[question.questionId] !== undefined &&
+                  activeQuestion !== index
+                }
+                disabled={completedQuestions < index}
+              >
                 <StepButton onClick={() => setActiveQuestion(index)} />
               </Step>
             ))}
           </Stepper>
-          <Box sx={{ width: "100%" }}>
-            <LinearProgress variant="determinate" value={percentComplete} />
-            Percent Complete: {percentComplete || 0}%
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 2,
+              marginBottom: 2,
+            }}
+          >
+            <Button
+              onClick={() => setActiveQuestion(activeQuestion - 1)}
+              disabled={activeQuestion === 0}
+            >
+              Back
+            </Button>
+            <Button
+              onClick={() => setActiveQuestion(activeQuestion + 1)}
+              disabled={
+                activeQuestion === questions.length - 1 ||
+                responses[currentQuestion.questionId] === undefined
+              }
+            >
+              Next
+            </Button>
+            <Box sx={{ width: "100%" }}>
+              <LinearProgress variant="determinate" value={percentComplete} />
+            </Box>
           </Box>
-          <Typography sx={{ margin: 1 }}>{title}</Typography>
+          {completedQuestions === questions.length && (
+            <Box sx={{ display: "flex", justifyContent: "center", margin: 2 }}>
+              <Button variant="contained" onClick={() => onSubmit(responses)}>
+                View Results
+              </Button>
+            </Box>
+          )}
           <Divider />
+          <Typography sx={{ margin: 1 }}>{title}</Typography>
           <Box sx={{ margin: 1 }}>
-            <Typography>{currentQuestion.title}</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {`(${activeQuestion + 1} out of ${questions.length}): ${
+                currentQuestion.title
+              }`}
+            </Typography>
             <FormControl>
               <RadioGroup
-                value={responses[activeQuestion]}
+                value={responses[currentQuestion.questionId] ?? null}
                 onChange={(evt) => {
                   setResponses({
                     ...responses,
                     [currentQuestion.questionId]: Number(evt.target.value),
                   });
-                  setActiveQuestion(activeQuestion + 1);
                 }}
               >
                 {answers.map((answer) => (
@@ -81,23 +127,6 @@ export default function Diagnostic(props: DiagnosticProps) {
                 ))}
               </RadioGroup>
             </FormControl>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Button
-                onClick={() => setActiveQuestion(activeQuestion - 1)}
-                disabled={activeQuestion === 0}
-              >
-                Back
-              </Button>
-              <Button
-                onClick={() => setActiveQuestion(activeQuestion + 1)}
-                disabled={
-                  activeQuestion === questions.length ||
-                  completedQuestions < activeQuestion
-                }
-              >
-                Next
-              </Button>
-            </Box>
           </Box>
         </CardContent>
       </Card>
