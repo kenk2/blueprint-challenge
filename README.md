@@ -22,13 +22,13 @@ There are a few shortcomings. This is a fairly short questionnaire, but if we ad
 
 In order to make this better for production, a few future considerations:
 
-1. Change the data modeling so that the queries are faster. We can add indexes and key constraints. If we ever decide to add more types of questionnaires, we would also have to change the table schemas and to be able to support potential other types of management (delete questionnares, needs foreign keys and cascades). Doing this would also cut down on the data transforms needed in the API routes in `/api/assess` and `/api/questions`.
+1. Change the data modeling so that the queries are faster. We can add indexes and key constraints. If we ever decide to add more types of questionnaires, we would also have to change the table schemas and to be able to support potential other types of management (delete questionnares, needs foreign keys and cascades). Doing this would also cut down on the messy data transforms in `/api/assess` and `/api/questions`.
 
-2. Consider using other types of server architectures. Currently we are using API routes generated from Next.JS. This is fine for now, but if millions of people use this app, we might want to consider a persistant connection with a gateway layer to handle many responses coming in at a time.
+2. Consider using other types of server architectures. Currently we are using API routes generated from Next.JS. This is fine for now, but if millions of people use this app, we might want to consider a persistant connection with a gateway layer to handle many responses coming in at a time since we are using a free tier database with a limited number of connections.
 
 3. As an added bonus, we might want to add some other monitoring tools to check app health. Things along the lines of Grafana, Sentry, and Datadog would be nice if budget and time are permitting.
 
-4. More robust tests are always welcome. Some tests are present but we'd like to have more if possible.
+4. Tests are always welcome for future useability and code quality.
 
 # Local Setup instructions
 

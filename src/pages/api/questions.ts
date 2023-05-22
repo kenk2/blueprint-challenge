@@ -11,9 +11,11 @@ export default async function handler(
   const questionsQuery: Question[] = (
     await client("questions").select(["question_id", "title"])
   ).map(toCamelCase);
+
   const answersQuery: Answer[] = (await client("answers").select("*")).map(
     toCamelCase
   );
+
   const diagnosticMetaQuery = await client("diagnostic").first().where({
     id: "abcd-123",
   });
