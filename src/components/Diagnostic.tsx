@@ -2,6 +2,7 @@ import {
   Diagnostic as DiagnosticForm,
   DiagnosticResponses,
 } from "@kenk2/types";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Button,
@@ -23,10 +24,11 @@ import { useMemo, useState } from "react";
 type DiagnosticProps = {
   diagnostic: DiagnosticForm;
   onSubmit: (results: DiagnosticResponses) => void;
+  isLoadingResults: boolean;
 };
 
 export default function Diagnostic(props: DiagnosticProps) {
-  const { diagnostic, onSubmit } = props;
+  const { diagnostic, onSubmit, isLoadingResults } = props;
   const { questions, title, answers } = diagnostic.content.sections[0];
   const [activeQuestion, setActiveQuestion] = useState<number>(0);
   const [responses, setResponses] = useState<DiagnosticResponses>({});
@@ -74,13 +76,17 @@ export default function Diagnostic(props: DiagnosticProps) {
             }}
           >
             <Button
+              variant="contained"
               onClick={() => setActiveQuestion(activeQuestion - 1)}
               disabled={activeQuestion === 0}
+              sx={{ marginRight: 1 }}
             >
               Back
             </Button>
             <Button
+              variant="contained"
               onClick={() => setActiveQuestion(activeQuestion + 1)}
+              sx={{ marginRight: 1 }}
               disabled={
                 activeQuestion === questions.length - 1 ||
                 responses[currentQuestion.questionId] === undefined
@@ -88,15 +94,24 @@ export default function Diagnostic(props: DiagnosticProps) {
             >
               Next
             </Button>
-            <Box sx={{ width: "100%" }}>
+            <Box
+              sx={{ width: "100%", display: "flex", flexDirection: "column" }}
+            >
               <LinearProgress variant="determinate" value={percentComplete} />
+              <Typography sx={{ marginRight: 1 }}>
+                Progress: {percentComplete}%
+              </Typography>
             </Box>
           </Box>
           {completedQuestions === questions.length && (
             <Box sx={{ display: "flex", justifyContent: "center", margin: 2 }}>
-              <Button variant="contained" onClick={() => onSubmit(responses)}>
+              <LoadingButton
+                variant="contained"
+                onClick={() => onSubmit(responses)}
+                loading={isLoadingResults}
+              >
                 View Results
-              </Button>
+              </LoadingButton>
             </Box>
           )}
           <Divider />
@@ -115,6 +130,10 @@ export default function Diagnostic(props: DiagnosticProps) {
                     ...responses,
                     [currentQuestion.questionId]: Number(evt.target.value),
                   });
+
+                  setActiveQuestion(
+                    Math.min(activeQuestion + 1, questions.length - 1)
+                  );
                 }}
               >
                 {answers.map((answer) => (

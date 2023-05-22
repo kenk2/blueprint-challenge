@@ -1,12 +1,16 @@
 type Answer = {
   value: number;
   questionId: string;
-  title: string;
+  title?: string;
 };
 
 type Domain = {
-  questionId: string;
   domain: string;
+  assessment: string;
+};
+
+type Assessments = {
+  [assessment: string]: string[];
 };
 
 type Question = {
@@ -67,6 +71,7 @@ type DiagnosticMeta = {
 export type {
   Answer,
   Domain,
+  Assessments,
   Diagnostic,
   Diagnosis,
   DiagnosisScore,

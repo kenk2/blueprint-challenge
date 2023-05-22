@@ -4,7 +4,7 @@ import { Answer } from "@kenk2/types";
 
 const useAnswers = () =>
   useMutation((answers: Answer[]) =>
-    axios.post("/api/questions", {
+    axios.post<string[]>("/api/assess", {
       answers,
     })
   );

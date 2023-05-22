@@ -1,16 +1,32 @@
 import Head from "next/head";
 import styles from "@kenk2/styles/Home.module.css";
-import { Diagnostic, Intro } from "@kenk2/components";
-import { useQuestions } from "@kenk2/hooks";
-import { DiagnosticResponses } from "@kenk2/types";
+import { Diagnostic, Intro, Result } from "@kenk2/components";
+import { useAnswers, useDomains, useQuestions } from "@kenk2/hooks";
+import { DiagnosticResponses, Answer } from "@kenk2/types";
 import { useState } from "react";
-import { Backdrop } from "@mui/material";
 
 export default function Home() {
-  const { data, isLoading: isLoadingDiagnostic } = useQuestions();
+  const { data: questionData, isLoading: isLoadingDiagnostic } = useQuestions();
+  const { data: domainData } = useDomains();
+  const {
+    mutate,
+    data: assessmentResult,
+    isLoading: isLoadingResults,
+  } = useAnswers();
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [started, setStarted] = useState<boolean>(false);
 
-  const handleSubmit = (results: DiagnosticResponses) => {};
+  const handleSubmit = async (results: DiagnosticResponses) => {
+    const payload: Answer[] = Object.entries(results).map((answer) => ({
+      questionId: answer[0],
+      value: answer[1],
+    }));
+
+    await mutate(payload, {
+      onSuccess: () => setModalOpen(true),
+    });
+  };
 
   return (
     <>
@@ -21,13 +37,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {started && data?.data ? (
-          <Diagnostic diagnostic={data?.data} onSubmit={handleSubmit} />
+        {started && questionData?.data && domainData ? (
+          <Diagnostic
+            diagnostic={questionData?.data}
+            onSubmit={handleSubmit}
+            isLoadingResults={isLoadingResults}
+          />
         ) : (
           <Intro
             loading={isLoadingDiagnostic}
             onStart={() => setStarted(true)}
-            diagnostic={data?.data}
+            diagnostic={questionData?.data}
+          />
+        )}
+        {domainData && (
+          <Result
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            results={assessmentResult?.data}
+            domains={domainData}
           />
         )}
       </main>
